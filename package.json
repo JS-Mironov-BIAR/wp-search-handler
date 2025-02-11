@@ -1,0 +1,44 @@
+{
+  "name": "custom-ajax-search",
+  "version": "1.0.0",
+  "description": "AJAX-поиск для WordPress",
+  "main": "webpack.config.js",
+  "scripts": {
+    "build": "npx webpack",
+    "watch": "npx webpack --watch",
+    "start": "npm run watch",
+    "lint": "eslint \"assets/src/**/*.js\"",
+    "lint:fix": "eslint \"assets/src/**/*.js\" --fix"
+  },
+  "keywords": [
+    "wordpress",
+    "ajax-search",
+    "plugin"
+  ],
+  "author": "Егор Миронов",
+  "license": "GPL-2.0",
+  "repository": {},
+  "devDependencies": {
+    "@babel/core": "^7.26.8",
+    "@babel/preset-env": "^7.26.8",
+    "babel-loader": "^9.2.1",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.3",
+    "prettier": "^3.5.0",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
+  },
+  "browserslist": [
+    ">0.5%",
+    "last 2 versions",
+    "Firefox ESR",
+    "not dead"
+  ],
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}
