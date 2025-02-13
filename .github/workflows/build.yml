@@ -19,7 +19,7 @@ jobs:
       - name: 🛠 Installing Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '10.2.3'
+          node-version: '18'
           cache: 'npm'
 
       - name: 📦 Installing dependencies
@@ -36,7 +36,7 @@ jobs:
           npm run build
 
       - name: 🚀 Saving the `dist/` as an artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist-files
           path: assets/dist/
