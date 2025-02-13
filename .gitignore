@@ -6,7 +6,6 @@ yarn.lock
 package-lock.json
 
 # Webpack
-dist/
 .cache/
 output/
 
