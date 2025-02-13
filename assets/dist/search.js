@@ -503,6 +503,7 @@ function performSearch(query, resultsContainer) {
     (0,_components_resultList_js__WEBPACK_IMPORTED_MODULE_2__.clearResults)(resultsContainer);
     return;
   }
+  console.log('checked search');
   if ((0,_components_input_inputState__WEBPACK_IMPORTED_MODULE_1__.isLoading)()) return;
   (0,_components_input_inputState__WEBPACK_IMPORTED_MODULE_1__.setLoading)(true);
   (0,_components_preloader__WEBPACK_IMPORTED_MODULE_0__.showLoader)();
