@@ -8,15 +8,19 @@ import {
     wasInputCleared,
     resetInputCleared,
     resetState,
-    setInitialInputValue
+    setInitialInputValue,
+    isBackspaceActive,
+    setBackspaceState,
 } from './inputState.js'
 import { normalizeText } from './inputUtils.js'
 import { updateButtonState } from '../../ui'
 
-const SEARCH_DELAY = 1500
+const SEARCH_DELAY = 700
 let timeoutId
 
 export function onInput(event, input, resultsContainer) {
+    //if (isBackspaceActive() && !isLoading()) return
+
     if (isLoading()) {
         event.preventDefault()
         input.value = getLastStableInputValue()
@@ -63,9 +67,8 @@ export function onInput(event, input, resultsContainer) {
 
     timeoutId = setTimeout(() => {
         if (!isLoading()) {
-            if (normalizeText(currentValue) === normalizeText(getLastStableInputValue())) {
-                return
-            }
+            if (isBackspaceActive()) return
+            if (normalizeText(currentValue) === normalizeText(getLastStableInputValue())) return
 
             performSearch(currentValue, resultsContainer)
             setLastStableInputValue(currentValue)
@@ -91,4 +94,16 @@ export function onCut(event, input, resultsContainer) {
 
 export function onClick(resultsContainer) {
     showResults(resultsContainer)
+}
+
+export function onKeydown(event) {
+    if (event.key === 'Backspace') {
+        setBackspaceState(true)
+    }
+}
+
+export function onKeyup(event) {
+    if (event.key === 'Backspace') {
+        setBackspaceState(false)
+    }
 }
