@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - master       # Production
-      - develop    # Development
-      - 'feature/**'  # All branches starting with feature/
-      - 'hotfix/**'   # All branches starting with hotfix/
+      - develop      # Development
+      - 'feature/**' # Feature branches
+      - 'hotfix/**'  # Hotfix branches
 
 jobs:
   build:
@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false  # Отключаем стандартную аутентификацию
 
       - name: 🛠 Installing Node.js
         uses: actions/setup-node@v3
@@ -27,7 +28,7 @@ jobs:
       - name: 📦 Installing dependencies
         run: npm ci
 
-      - name: 🔨 We define the environment and assemble the project
+      - name: 🔨 Define environment and build project
         run: |
           if [[ $GITHUB_REF == "refs/heads/master" ]]; then
             export NODE_ENV=production
@@ -38,9 +39,12 @@ jobs:
           npm run build
 
       - name: 📤 Auto commit `dist/`
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add assets/dist/
-          git commit -m "feat: Automatic dist creation dist for $NODE_ENV"
-          git push
+          git commit -m "feat: Automatic dist creation for $NODE_ENV" || echo "No changes to commit"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git push origin HEAD:${GITHUB_REF#refs/heads/}
