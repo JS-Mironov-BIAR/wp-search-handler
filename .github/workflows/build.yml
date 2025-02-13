@@ -30,23 +30,23 @@ jobs:
       - name: 📦 Installing dependencies
         run: npm ci
 
+      - name: 🧹 Clean dist before build
+        run: rm -rf assets/dist/* # Удаляет dist перед билдом
+
       - name: 🔨 Define environment and build project
         run: |
           if [[ $GITHUB_REF == "refs/heads/master" ]]; then
-            export NODE_ENV=production
+            npm run build -- --mode=production
           else
-            export NODE_ENV=development
+            npm run build -- --mode=development
           fi
-          echo "NODE_ENV=$NODE_ENV"
-          npm run build
 
-      - name: 📤 Auto commit `dist/`
+      - name: 📤 Auto commit `dist/` (GitHub Actions)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add assets/dist/
-          git commit -m "feat: Automatic dist creation for $NODE_ENV" || echo "No changes to commit"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git add -f assets/dist/ # Принудительно добавляем dist
+          git commit -m "feat: Automatic dist creation for $GITHUB_REF_NAME" || echo "No changes to commit"
           git push origin HEAD:${GITHUB_REF#refs/heads/}
