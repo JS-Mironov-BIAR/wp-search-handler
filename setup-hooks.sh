@@ -19,10 +19,6 @@ HOOK_PATH=".git/hooks/pre-commit"
 cat > "$HOOK_PATH" <<EOL
 #!/bin/sh
 
-echo "🛑 Removing cached assets/dist before commit..."
-git rm -r --cached assets/dist
-echo "✅ assets/dist removed from cache!"
-
 echo "🔄 Rebuilding dist before commit..."
 npm run build
 git add assets/dist/
