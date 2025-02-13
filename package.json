@@ -8,7 +8,9 @@
     "watch": "npx webpack --watch",
     "start": "npm run watch",
     "lint": "eslint \"assets/src/**/*.js\"",
-    "lint:fix": "eslint \"assets/src/**/*.js\" --fix"
+    "lint:fix": "eslint \"assets/src/**/*.js\" --fix",
+    "setup": "chmod +x setup-hooks.sh && ./setup-hooks.sh",
+    "postinstall": "npm run setup"
   },
   "keywords": [
     "wordpress",
