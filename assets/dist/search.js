@@ -129,81 +129,109 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _inputState_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./inputState.js */ "./assets/src/components/input/inputState.js");
 /* harmony import */ var _inputUtils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./inputUtils.js */ "./assets/src/components/input/inputUtils.js");
 /* harmony import */ var _ui__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../ui */ "./assets/src/ui.js");
+/* harmony import */ var _inputProcessing__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./inputProcessing */ "./assets/src/components/input/inputProcessing.js");
 
 
 
 
 
-const SEARCH_DELAY = 700;
-let timeoutId;
+
+const SEARCH_DELAY = 700; // ⏳ Задержка перед выполнением поиска
+let timeoutId; // 🕒 Таймер для задержки поиска
+
+// 📌 Обработчик ввода текста в поисковую строку
 function onInput(event, input, resultsContainer) {
-  //if (isBackspaceActive() && !isLoading()) return
-
+  // 🛑 Если уже идёт поиск, блокируем ввод
   if ((0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.isLoading)()) {
     event.preventDefault();
-    input.value = (0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.getLastStableInputValue)();
+    input.value = (0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.getLastStableInputValue)(); // ⏪ Возвращаем последнее стабильное значение
     return;
   }
+
+  // 🔄 Очищаем предыдущий таймер, чтобы не запускать поиск слишком часто
   clearTimeout(timeoutId);
+
+  // ✂️ Убираем пробелы по краям
   const currentValue = input.value.trim();
+
+  // 🛑 Если поле пустое, сбрасываем состояние
   if (currentValue === '') {
-    (0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.resetState)({
-      resetInitial: false
-    });
-    (0,_resultList_js__WEBPACK_IMPORTED_MODULE_1__.clearResults)(resultsContainer);
-    (0,_resultList_js__WEBPACK_IMPORTED_MODULE_1__.hideResults)(resultsContainer);
-    (0,_ui__WEBPACK_IMPORTED_MODULE_4__.updateButtonState)('search');
+    (0,_inputProcessing__WEBPACK_IMPORTED_MODULE_5__.handleEmptyInput)(resultsContainer);
     return;
   }
+
+  // ℹ️ Если введено 3 или меньше символов, применяем логику короткого ввода
   if (currentValue.length <= 3) {
-    (0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.resetState)();
+    (0,_inputProcessing__WEBPACK_IMPORTED_MODULE_5__.handleShortInput)(resultsContainer);
   }
-  if (currentValue.length <= 3 && resultsContainer.querySelectorAll('li').length !== 0) {
-    (0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.setLoading)(false);
-    (0,_resultList_js__WEBPACK_IMPORTED_MODULE_1__.clearResults)(resultsContainer);
-    (0,_resultList_js__WEBPACK_IMPORTED_MODULE_1__.hideResults)(resultsContainer);
-  }
+
+  // 📌 Если поле было очищено вручную, сбрасываем флаг очистки и запоминаем начальное значение
   if ((0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.wasInputCleared)()) {
     (0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.setInitialInputValue)(currentValue);
     (0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.resetInputCleared)();
   }
+
+  // 🛑 Если текст не изменился по смыслу (с учётом регистра и пробелов), не запускаем поиск
   if ((0,_inputUtils_js__WEBPACK_IMPORTED_MODULE_3__.normalizeText)(currentValue) === (0,_inputUtils_js__WEBPACK_IMPORTED_MODULE_3__.normalizeText)((0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.getLastStableInputValue)())) {
     return;
   }
+
+  // 🔘 Обновляем кнопку (🔍 Поиск или ✖ Очистить)
   (0,_ui__WEBPACK_IMPORTED_MODULE_4__.updateButtonState)(currentValue.length > 0 ? 'clear' : 'search');
+
+  // 🔄 Минимум 3 символа для поиска
   if (currentValue.length < 3) return;
+
+  // ⏳ Запускаем поиск с задержкой `SEARCH_DELAY`
   timeoutId = setTimeout(() => {
+    // ✅ Проверяем, что нет активного поиска
     if (!(0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.isLoading)()) {
-      if ((0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.isBackspaceActive)()) return;
-      if ((0,_inputUtils_js__WEBPACK_IMPORTED_MODULE_3__.normalizeText)(currentValue) === (0,_inputUtils_js__WEBPACK_IMPORTED_MODULE_3__.normalizeText)((0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.getLastStableInputValue)())) return;
-      (0,_search_js__WEBPACK_IMPORTED_MODULE_0__["default"])(currentValue, resultsContainer);
-      (0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.setLastStableInputValue)(currentValue);
+      if ((0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.isBackspaceActive)()) return; // 🛑 Если `Backspace` зажат, не запускаем поиск
+      if ((0,_inputUtils_js__WEBPACK_IMPORTED_MODULE_3__.normalizeText)(currentValue) === (0,_inputUtils_js__WEBPACK_IMPORTED_MODULE_3__.normalizeText)((0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.getLastStableInputValue)())) return; // 🛑 Проверяем, что значение действительно изменилось
+
+      (0,_search_js__WEBPACK_IMPORTED_MODULE_0__["default"])(currentValue, resultsContainer); // 🔍 Запускаем AJAX-поиск
+      (0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.setLastStableInputValue)(currentValue); // 💾 Запоминаем последнее стабильное значение
     }
   }, SEARCH_DELAY);
 }
+
+// 📌 Обработчик "вырезания" текста (`Ctrl+X`)
 function onCut(event, input, resultsContainer) {
+  // 🛑 Если идёт поиск, блокируем `cut`
   if ((0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.isLoading)()) {
     event.preventDefault();
     return;
   }
+
+  // ⏳ Через 10 мс проверяем, не стало ли поле пустым
   setTimeout(() => {
     if (input.value.trim() === '') {
-      (0,_resultList_js__WEBPACK_IMPORTED_MODULE_1__.clearResults)(resultsContainer);
-      (0,_resultList_js__WEBPACK_IMPORTED_MODULE_1__.hideResults)(resultsContainer);
+      (0,_resultList_js__WEBPACK_IMPORTED_MODULE_1__.clearResults)(resultsContainer); // 🗑 Очищаем результаты поиска
+      (0,_resultList_js__WEBPACK_IMPORTED_MODULE_1__.hideResults)(resultsContainer); // 🔽 Прячем список результатов
+
+      // 🔘 Показываем кнопку поиска
       (0,_ui__WEBPACK_IMPORTED_MODULE_4__.updateButtonState)('search');
     }
   }, 10);
 }
+
+// 📌 Обработчик клика в поле ввода (открывает результаты поиска)
 function onClick(resultsContainer) {
   (0,_resultList_js__WEBPACK_IMPORTED_MODULE_1__.showResults)(resultsContainer);
 }
+
+// 📌 Обработчик нажатия `Backspace` (отмечает, что кнопка зажата)
 function onKeydown(event) {
   if (event.key === 'Backspace') {
+    // 🛑 Отмечаем, что `Backspace` удерживается
     (0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.setBackspaceState)(true);
   }
 }
+
+// 📌 Обработчик отпускания `Backspace` (разрешает поиск)
 function onKeyup(event) {
   if (event.key === 'Backspace') {
+    // ✅ Теперь `Backspace` не удерживается
     (0,_inputState_js__WEBPACK_IMPORTED_MODULE_2__.setBackspaceState)(false);
   }
 }
@@ -228,6 +256,42 @@ function initInputHandlers(input, resultsContainer) {
   input.addEventListener('click', () => (0,_inputEvents_js__WEBPACK_IMPORTED_MODULE_0__.onClick)(resultsContainer));
   input.addEventListener('keydown', event => (0,_inputEvents_js__WEBPACK_IMPORTED_MODULE_0__.onKeydown)(event));
   input.addEventListener('keyup', event => (0,_inputEvents_js__WEBPACK_IMPORTED_MODULE_0__.onKeyup)(event));
+}
+
+/***/ }),
+
+/***/ "./assets/src/components/input/inputProcessing.js":
+/*!********************************************************!*\
+  !*** ./assets/src/components/input/inputProcessing.js ***!
+  \********************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   handleEmptyInput: function() { return /* binding */ handleEmptyInput; },
+/* harmony export */   handleShortInput: function() { return /* binding */ handleShortInput; }
+/* harmony export */ });
+/* harmony import */ var _inputState_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./inputState.js */ "./assets/src/components/input/inputState.js");
+/* harmony import */ var _resultList_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../resultList.js */ "./assets/src/components/resultList.js");
+/* harmony import */ var _ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../ui */ "./assets/src/ui.js");
+
+
+
+function handleEmptyInput(resultsContainer) {
+  (0,_inputState_js__WEBPACK_IMPORTED_MODULE_0__.resetState)({
+    resetInitial: false
+  });
+  (0,_resultList_js__WEBPACK_IMPORTED_MODULE_1__.clearResults)(resultsContainer);
+  (0,_resultList_js__WEBPACK_IMPORTED_MODULE_1__.hideResults)(resultsContainer);
+  (0,_ui__WEBPACK_IMPORTED_MODULE_2__.updateButtonState)('search');
+}
+function handleShortInput(resultsContainer) {
+  (0,_inputState_js__WEBPACK_IMPORTED_MODULE_0__.resetState)();
+  if (resultsContainer.querySelectorAll('li').length !== 0) {
+    (0,_inputState_js__WEBPACK_IMPORTED_MODULE_0__.setLoading)(false);
+    (0,_resultList_js__WEBPACK_IMPORTED_MODULE_1__.clearResults)(resultsContainer);
+    (0,_resultList_js__WEBPACK_IMPORTED_MODULE_1__.hideResults)(resultsContainer);
+  }
 }
 
 /***/ }),
@@ -439,7 +503,6 @@ function performSearch(query, resultsContainer) {
     (0,_components_resultList_js__WEBPACK_IMPORTED_MODULE_2__.clearResults)(resultsContainer);
     return;
   }
-  console.log('Current NODE_ENV:', process.env);
   if ((0,_components_input_inputState__WEBPACK_IMPORTED_MODULE_1__.isLoading)()) return;
   (0,_components_input_inputState__WEBPACK_IMPORTED_MODULE_1__.setLoading)(true);
   (0,_components_preloader__WEBPACK_IMPORTED_MODULE_0__.showLoader)();
