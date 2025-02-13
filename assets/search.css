@@ -46,7 +46,7 @@
     border: 1px solid #ddd;
     list-style: none;
     margin: 0.5rem 0 0;
-    padding: 0.5rem;
+    padding: 0;
     max-height: 90vh;
     overflow-y: auto;
     z-index: 10;
@@ -64,7 +64,7 @@
     background-color: #eeeeee;
     border-radius: 0.25rem;
     padding: 0.5rem;
-    margin-bottom: 1rem;
+    margin: 0.5rem;
     transition: 200ms ease-in-out;
 }
 

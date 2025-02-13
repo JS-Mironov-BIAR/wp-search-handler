@@ -1,0 +1,7 @@
+import { onInput, onCut, onClick } from './inputEvents.js'
+
+export function initInputHandlers(input, resultsContainer) {
+    input.addEventListener('input', (event) => onInput(event, input, resultsContainer))
+    input.addEventListener('cut', (event) => onCut(event, input, resultsContainer))
+    input.addEventListener('click', () => onClick(resultsContainer))
+}
