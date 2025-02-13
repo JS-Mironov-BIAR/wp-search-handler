@@ -10,6 +10,8 @@ export default function performSearch(query, resultsContainer) {
         return
     }
 
+    console.log('Search load')
+
     if (isLoading()) return
 
     setLoading(true)
