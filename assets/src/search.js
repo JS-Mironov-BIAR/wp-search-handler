@@ -10,8 +10,6 @@ export default function performSearch(query, resultsContainer) {
         return
     }
 
-    console.log('Current NODE_ENV:', process.env)
-
     if (isLoading()) return
 
     setLoading(true)
