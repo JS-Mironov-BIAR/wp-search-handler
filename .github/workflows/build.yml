@@ -1,9 +1,9 @@
-name: Build and Deploy
+name: Build and Auto-Commit Dist
 
 on:
   push:
     branches:
-      - main       # Production
+      - master       # Production
       - develop    # Development
       - 'feature/**'  # All branches starting with feature/
       - 'hotfix/**'   # All branches starting with hotfix/
@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: 🔄 Cloning the repository
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🛠 Installing Node.js
         uses: actions/setup-node@v3
@@ -27,7 +29,7 @@ jobs:
 
       - name: 🔨 We define the environment and assemble the project
         run: |
-          if [[ $GITHUB_REF == "refs/heads/main" ]]; then
+          if [[ $GITHUB_REF == "refs/heads/master" ]]; then
             export NODE_ENV=production
           else
             export NODE_ENV=development
@@ -35,26 +37,10 @@ jobs:
           echo "NODE_ENV=$NODE_ENV"
           npm run build
 
-      - name: 🚀 Saving the `dist/` as an artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist-files
-          path: assets/dist/
-
-      - name: 📤 (+) Deploy `dist/` to a separate branch
-        if: github.ref == 'refs/heads/main'
+      - name: 📤 Auto commit `dist/`
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout --orphan dist
-          git reset --hard
-          mv assets/dist/* .
-          git add .
-          git commit -m "feat: Automatic dist creation"
-          git push --force origin dist
-
-      - name: 📦 (+) Creating a release
-        if: github.ref == 'refs/heads/main'
-        uses: softprops/action-gh-release@v1
-        with:
-          files: assets/dist/*
+          git add assets/dist/
+          git commit -m "feat: Automatic dist creation dist for $NODE_ENV"
+          git push

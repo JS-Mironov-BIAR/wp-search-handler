@@ -23,5 +23,5 @@ logs
 .eslintrc.js
 .prettierrc.json
 
-# Tailwind (если используешь)
+# Tailwind
 tailwind.config.js

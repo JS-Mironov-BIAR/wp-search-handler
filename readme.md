@@ -107,3 +107,106 @@ npm run watch
 
 ### 📜 Лицензия | License
 Этот плагин распространяется по лицензии **GPL-2.0.** | This plugin is licensed under the **GPL-2.0.**
+
+## 📌 Getting Started
+
+### 🔧 Prerequisites
+Ensure you have the following installed:
+- **Node.js 18+**
+- **npm 6+**
+- **GitHub CLI (`gh`)** (optional, for downloading artifacts)
+
+### 🛠 Installation and Setup
+1. **Clone the repository**
+   ```sh
+   git clone https://github.com/JS-Mironov-BIAR/wp-search-handler.git
+   cd wp-search-handler
+   ```
+
+2. **Install dependencies**
+```sh
+   npm ci
+   ```
+3. **Set up Git Hooks** 
+
+Run the following script to automatically configure local exclusions and pre-commit hooks:
+```sh
+   bash setup-hooks.sh
+   ```
+✅ This will:
+
+1. Exclude dist/ from manual commits (`.git/info/exclude`).
+2. Set up a pre-commit hook that automatically rebuilds `dist/` before committing.
+
+## 🔄 Workflow
+
+### 📥 Pulling the latest changes
+Whenever you run git pull, you will receive the latest dist/ changes automatically.
+
+### 📤 Making changes and committing
+When making changes:
+
+1. Modify the necessary files in `assets/src/` 
+2. **Commit your changes**
+```sh
+   git commit -m "feat: Updated search functionality"
+   ```
+3. **Push your changes**
+```sh
+   git push origin branch-name
+   ```
+
+## ⚙ Build and Development
+
+For local development:
+
+1. **Start the build process in watch mode**
+```sh
+   npm run watch
+   ```
+2. **Manually trigger a build**
+
+```sh
+   npm run build
+   ```
+
+## 🚀 CI/CD and Auto Deployment
+
+### 🔹 On push to `master`, GitHub Actions will:
+- Set **`NODE_ENV=production`**
+- Rebuild `dist/`
+- Commit the updated `dist/` automatically
+
+### 🔹 On push to `develop` or `feature/*` branches, GitHub Actions will:
+- Set **`NODE_ENV=development`**
+- Rebuild `dist/` (with **source-map** for debugging)
+- Commit the updated `dist/` automatically
+
+---
+
+## ✅ Best Practices
+- **Never manually modify `dist/`**
+- **Always use feature branches** (`feature/my-new-feature`)
+- **Use `npm run build` before testing locally**
+- **Ensure `setup-hooks.sh` is run after cloning the repository**
+
+---
+
+## 🔗 Contributing
+
+If you wish to contribute:
+
+1. **Fork** the repository.
+2. **Create a feature branch**
+   ```sh
+   git checkout -b feature/my-feature
+
+## 🚀 Push Your Changes
+
+After making your changes, push them to your feature branch:
+
+```sh
+git push origin feature/my-feature
+```
+
+Then, open a Pull Request to merge your changes.
