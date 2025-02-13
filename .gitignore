@@ -28,6 +28,3 @@ Thumbs.db
 logs/
 *.log
 
-# Dist
-/assets/dist/
-
