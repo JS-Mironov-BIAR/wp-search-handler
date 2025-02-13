@@ -440,6 +440,7 @@ function performSearch(query, resultsContainer) {
     return;
   }
   console.log('Search load 1');
+  console.log('Current NODE_ENV:', "development");
   if ((0,_components_input_inputState__WEBPACK_IMPORTED_MODULE_1__.isLoading)()) return;
   (0,_components_input_inputState__WEBPACK_IMPORTED_MODULE_1__.setLoading)(true);
   (0,_components_preloader__WEBPACK_IMPORTED_MODULE_0__.showLoader)();

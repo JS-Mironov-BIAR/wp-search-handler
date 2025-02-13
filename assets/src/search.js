@@ -11,6 +11,8 @@ export default function performSearch(query, resultsContainer) {
     }
 
     console.log('Search load 1')
+    console.log('Current NODE_ENV:', process.env.NODE_ENV)
+
 
     if (isLoading()) return
 
