@@ -1,23 +1,23 @@
 /* global cas_ajax */
 
 import { showLoader, hideLoader } from './components/preloader'
-import { setLoading } from './components/input.js'
-import { showResults } from './components/resultList.js'
+import { isLoading, setLoading } from './components/input/inputState'
+import { clearResults, showResults } from './components/resultList.js'
 
 export default function performSearch(query, resultsContainer) {
     if (!query.trim() || query.length <= 3) {
-        resultsContainer.innerHTML = ''
+        clearResults(resultsContainer)
         return
     }
 
-    if (setLoading(true)) return
-console.log('start search')
+    if (isLoading()) return
+
     setLoading(true)
     showLoader()
 
     fetch(cas_ajax.ajaxurl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
         body: new URLSearchParams({
             action: 'cas_ajax_search',
             search: query,
@@ -28,7 +28,7 @@ console.log('start search')
         .then((data) => {
             setLoading(false)
             hideLoader()
-            resultsContainer.innerHTML = ''
+            clearResults(resultsContainer)
 
             if (data.success && data.data.length > 0) {
                 resultsContainer.innerHTML = data.data.map(

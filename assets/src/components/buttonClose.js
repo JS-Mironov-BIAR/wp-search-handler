@@ -1,12 +1,14 @@
-import { collapseSearchForm, toggleButtons } from '../ui.js'
-import { clearInput, blurInput, setLoading, resetInitialInputValue } from './input.js'
+import { collapseSearchForm, updateButtonState } from '../ui.js'
+import { blurInput } from './input/inputUtils'
+import { clearInput} from './input/input'
+import { isLoading, resetInitialInputValue, setLoading } from './input/inputState'
 import { clearResults, hideResults } from './resultList.js'
 
 const closeButton = document.getElementById('cas-search-close')
 
 let timeoutId
 
-export function initCloseButton(form, resultsContainer) {
+export function initCloseButton(resultsContainer) {
     function closeSearch(event) {
         if (event) event.preventDefault()
 
@@ -14,27 +16,22 @@ export function initCloseButton(form, resultsContainer) {
         setLoading(false) // Разрешаем дальнейшие действия
 
         blurInput()
-        collapseSearchForm(form)
+        collapseSearchForm()
         clearInput()
+
         resetInitialInputValue() // 🛠 Теперь `initialInputValue` сбрасывается!
+
         clearResults(resultsContainer)
         hideResults(resultsContainer)
-        toggleButtons(false)
+
+        updateButtonState('search')
     }
 
     closeButton.addEventListener('click', closeSearch)
 
     document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
+        if (event.key === 'Escape' && !isLoading()) {
             closeSearch()
         }
     })
-}
-
-export function showCloseButton() {
-    closeButton.style.display = 'inline-block'
-}
-
-export function hideCloseButton() {
-    closeButton.style.display = 'none'
 }

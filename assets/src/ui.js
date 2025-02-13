@@ -1,23 +1,29 @@
-export function expandSearchForm(form) {
+const form = document.querySelector('.cas-search-form')
+
+const buttons = {
+    search: document.getElementById('cas-search-submit'),
+    clear: document.getElementById('cas-search-close'),
+    loading: document.getElementById('cas-search-loader'),
+}
+
+export function expandSearchForm() {
     form.classList.add('active')
 }
 
-export function collapseSearchForm(form) {
+export function collapseSearchForm() {
     form.classList.remove('active')
 }
 
-export function toggleButtons(showClose) {
-    const searchButton = document.getElementById('cas-search-submit')
-    const closeButton = document.getElementById('cas-search-close')
-    const input = document.getElementById('cas-search')
+export function updateButtonState(state) {
+    // Скрываем все кнопки
+    Object.values(buttons).forEach(button => {
+        if (button) button.style.display = 'none'
+    })
 
-    const isInputEmpty = input.value.trim().length === 0
-
-    if (showClose && !isInputEmpty) {
-        searchButton.style.display = 'none'
-        closeButton.style.display = 'inline-block'
+    // Показываем нужную кнопку
+    if (buttons[state]) {
+        buttons[state].style.display = 'inline-block'
     } else {
-        searchButton.style.display = 'inline-block'
-        closeButton.style.display = 'none'
+        console.warn(`Неизвестное состояние кнопки: ${state}`)
     }
 }
