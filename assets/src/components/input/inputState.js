@@ -2,12 +2,13 @@ let lastStableInputValue = ''
 let initialInputValue = ''
 let inputCleared = false
 let loading = false
+let isBackspaceHeld = false
 
 export function resetState({
-    resetLastStable = true,
-    resetInitial = true,
-    resetCleared = true
-} = {}) {
+                               resetLastStable = true,
+                               resetInitial = true,
+                               resetCleared = true
+                           } = {}) {
     if (resetLastStable) lastStableInputValue = ''
     if (resetInitial) initialInputValue = ''
     if (resetCleared) inputCleared = true
@@ -47,4 +48,12 @@ export function resetInitialInputValue() {
 
 export function resetInputValue(input) {
     input.value = ''
+}
+
+export function setBackspaceState(state) {
+    isBackspaceHeld = state
+}
+
+export function isBackspaceActive() {
+    return isBackspaceHeld
 }
