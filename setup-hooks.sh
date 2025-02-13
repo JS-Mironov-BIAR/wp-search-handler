@@ -13,11 +13,15 @@ else
     echo "✔ assets/dist/ is already in .git/info/exclude"
 fi
 
-# 2️⃣ Create a pre-commit hook to rebuild dist before committing
+# 2️⃣ Create a pre-commit hook to remove `dist/` from index and rebuild it
 HOOK_PATH=".git/hooks/pre-commit"
 
 cat > "$HOOK_PATH" <<EOL
 #!/bin/sh
+
+echo "🛑 Removing cached assets/dist before commit..."
+git rm -r --cached assets/dist
+echo "✅ assets/dist removed from cache!"
 
 echo "🔄 Rebuilding dist before commit..."
 npm run build
