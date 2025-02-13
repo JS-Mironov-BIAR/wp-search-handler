@@ -11,13 +11,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
-    steps:
+  steps:
       - name: 🔄 Cloning the repository
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          persist-credentials: false  # Отключаем стандартную аутентификацию
+          persist-credentials: true
 
       - name: 🛠 Installing Node.js
         uses: actions/setup-node@v3
