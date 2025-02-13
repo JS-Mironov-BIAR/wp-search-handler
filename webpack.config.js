@@ -1,12 +1,19 @@
 const path = require('path');
+const webpack = require('webpack');
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
     entry: './assets/src/index.js',
     output: {
-        filename: 'search.js',
+        filename: isProduction ? 'search.min.js' : 'search.js',
         path: path.resolve(__dirname, 'assets/dist'),
     },
-    mode: 'production',
+    mode: isProduction ? 'production' : 'development',
+    devtool: isProduction ? false : 'source-map',
+    optimization: {
+        minimize: isProduction,
+    },
     module: {
         rules: [
             {
@@ -20,5 +27,10 @@ module.exports = {
                 }
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) // 🔥 Passing `NODE_ENV' to the code
+        })
+    ]
 };
