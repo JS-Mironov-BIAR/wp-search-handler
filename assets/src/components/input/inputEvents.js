@@ -14,102 +14,102 @@ import { normalizeText } from './inputUtils.js'
 import { updateButtonState } from '../../ui'
 import { handleEmptyInput, handleShortInput } from './inputProcessing'
 
-const SEARCH_DELAY = 700 // ⏳ Задержка перед выполнением поиска
-let timeoutId // 🕒 Таймер для задержки поиска
+const SEARCH_DELAY = 700 // ⏳ Delay before executing the search
+let timeoutId // 🕒 Timer for delaying the search
 
-// 📌 Обработчик ввода текста в поисковую строку
+// 📌 Handles text input in the search field
 export function onInput(event, input, resultsContainer) {
-    // 🛑 Если уже идёт поиск, блокируем ввод
+    // 🛑 If a search is already in progress, prevent further input
     if (isLoading()) {
         event.preventDefault()
-        input.value = getLastStableInputValue() // ⏪ Возвращаем последнее стабильное значение
+        input.value = getLastStableInputValue() // ⏪ Restore the last stable value
         return
     }
 
-    // 🔄 Очищаем предыдущий таймер, чтобы не запускать поиск слишком часто
+    // 🔄 Clear the previous timeout to prevent excessive search triggers
     clearTimeout(timeoutId)
 
-    // ✂️ Убираем пробелы по краям
+    // ✂️ Trim whitespace from input
     const currentValue = input.value.trim()
 
-    // 🛑 Если поле пустое, сбрасываем состояние
+    // 🛑 If the input is empty, reset the state
     if (currentValue === '') {
         handleEmptyInput(resultsContainer)
         return
     }
 
-    // ℹ️ Если введено 3 или меньше символов, применяем логику короткого ввода
+    // ℹ️ If the input length is 3 characters or less, apply short input logic
     if (currentValue.length <= 3) {
         handleShortInput(resultsContainer)
     }
 
-    // 📌 Если поле было очищено вручную, сбрасываем флаг очистки и запоминаем начальное значение
+    // 📌 If the input was manually cleared, reset the flag and store the initial value
     if (wasInputCleared()) {
         setInitialInputValue(currentValue)
         resetInputCleared()
     }
 
-    // 🛑 Если текст не изменился по смыслу (с учётом регистра и пробелов), не запускаем поиск
+    // 🛑 If the input is effectively unchanged (ignoring case and spaces), do not trigger a search
     if (normalizeText(currentValue) === normalizeText(getLastStableInputValue())) {
         return
     }
 
-    // 🔘 Обновляем кнопку (🔍 Поиск или ✖ Очистить)
+    // 🔘 Update the button state (🔍 Search or ✖ Clear)
     updateButtonState(currentValue.length > 0 ? 'clear' : 'search')
 
-    // 🔄 Минимум 3 символа для поиска
+    // 🔄 Require at least 3 characters to perform a search
     if (currentValue.length < 3) return
 
-    // ⏳ Запускаем поиск с задержкой `SEARCH_DELAY`
+    // ⏳ Start the search with a delay (`SEARCH_DELAY`)
     timeoutId = setTimeout(() => {
-        // ✅ Проверяем, что нет активного поиска
+        // ✅ Ensure no active search is in progress
         if (!isLoading()) {
-            if (isBackspaceActive()) return // 🛑 Если `Backspace` зажат, не запускаем поиск
-            if (normalizeText(currentValue) === normalizeText(getLastStableInputValue())) return // 🛑 Проверяем, что значение действительно изменилось
+            if (isBackspaceActive()) return // 🛑 Do not trigger search if `Backspace` is being held
+            if (normalizeText(currentValue) === normalizeText(getLastStableInputValue())) return // 🛑 Ensure the value has actually changed
 
-            performSearch(currentValue, resultsContainer) // 🔍 Запускаем AJAX-поиск
-            setLastStableInputValue(currentValue) // 💾 Запоминаем последнее стабильное значение
+            performSearch(currentValue, resultsContainer) // 🔍 Execute AJAX search
+            setLastStableInputValue(currentValue) // 💾 Store the last stable value
         }
     }, SEARCH_DELAY)
 }
 
-// 📌 Обработчик "вырезания" текста (`Ctrl+X`)
+// 📌 Handles text cutting (`Ctrl+X`)
 export function onCut(event, input, resultsContainer) {
-    // 🛑 Если идёт поиск, блокируем `cut`
+    // 🛑 If a search is in progress, prevent `cut`
     if (isLoading()) {
         event.preventDefault()
         return
     }
 
-    // ⏳ Через 10 мс проверяем, не стало ли поле пустым
+    // ⏳ After 10ms, check if the input field is now empty
     setTimeout(() => {
         if (input.value.trim() === '') {
-            clearResults(resultsContainer) // 🗑 Очищаем результаты поиска
-            hideResults(resultsContainer) // 🔽 Прячем список результатов
+            clearResults(resultsContainer) // 🗑 Clear search results
+            hideResults(resultsContainer) // 🔽 Hide the results list
 
-            // 🔘 Показываем кнопку поиска
+            // 🔘 Show the search button
             updateButtonState('search')
         }
     }, 10)
 }
 
-// 📌 Обработчик клика в поле ввода (открывает результаты поиска)
+// 📌 Handles click inside the input field (displays search results)
 export function onClick(resultsContainer) {
     showResults(resultsContainer)
 }
 
-// 📌 Обработчик нажатия `Backspace` (отмечает, что кнопка зажата)
+// 📌 Handles `Backspace` key press (marks it as held)
 export function onKeydown(event) {
     if (event.key === 'Backspace') {
-        // 🛑 Отмечаем, что `Backspace` удерживается
+        // 🛑 Mark `Backspace` as held
         setBackspaceState(true)
     }
 }
 
-// 📌 Обработчик отпускания `Backspace` (разрешает поиск)
+// 📌 Handles `Backspace` key release (allows search)
 export function onKeyup(event) {
     if (event.key === 'Backspace') {
-        // ✅ Теперь `Backspace` не удерживается
+        // ✅ Now `Backspace` is no longer held
         setBackspaceState(false)
     }
 }
