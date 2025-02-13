@@ -9,7 +9,7 @@ export default function performSearch(query, resultsContainer) {
         clearResults(resultsContainer)
         return
     }
-    console.log('checked search')
+    console.log('checked search 1')
     if (isLoading()) return
 
     setLoading(true)
