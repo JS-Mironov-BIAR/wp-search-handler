@@ -1,31 +1,26 @@
-# Node.js
+# Node dependencies
 node_modules/
-npm-debug.log*
-yarn-error.log
-yarn.lock
-package-lock.json
 
-# Webpack
-.cache/
+# Webpack output
 assets/dist/
-output/
-
-# Editor and OS files
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
-.fleet/
-
-# Env files
-.env
-.env.local
-.env.development
-.env.production
-.env.test
 
 # Logs
 logs/
 *.log
 
-assets/dist/
+# System files
+*.DS_Store
+.idea/
+.vscode/
+.fleet/
+
+# Local env files
+.env
+.env.*
+
+# ESLint & Prettier
+.eslintrc.js
+.prettierrc.json
+
+# Tailwind
+tailwind.config.js
