@@ -45,5 +45,5 @@ jobs:
       - name: 📤 Upload ZIP artifact (direct plugin ZIP)
         uses: actions/upload-artifact@v4
         with:
-          name: custom-ajax-search.zip
+          name: custom-ajax-search
           path: build/custom-ajax-search.zip
