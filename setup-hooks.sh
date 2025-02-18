@@ -2,31 +2,51 @@
 
 echo "🔧 Setting up Git Hooks and local exclusions..."
 
-# 1️⃣ Add `dist/` to `.git/info/exclude` (local exclusion from commits)
+# 1️⃣ Добавляем `dist/` в `.git/info/exclude` (чтобы Git не отслеживал локально)
 EXCLUDE_PATH=".git/info/exclude"
 
 if ! grep -q "^assets/dist/" "$EXCLUDE_PATH"; then
     echo "Adding assets/dist/ to .git/info/exclude..."
     echo "assets/dist/" >> "$EXCLUDE_PATH"
-    echo "✅ dist/ is now ignored locally in Git but remains in the repository!"
+    echo "✅ dist/ is now ignored LOCALLY in Git but remains untracked!"
 else
     echo "✔ assets/dist/ is already in .git/info/exclude"
 fi
 
-# 2️⃣ Create a pre-commit hook to remove `dist/` from index and rebuild it
-HOOK_PATH=".git/hooks/pre-commit"
+# 2️⃣ Создаем `post-checkout` хук для сборки после `git checkout` (при смене ветки или создании новой)
+HOOK_PATH=".git/hooks/post-checkout"
 
 cat > "$HOOK_PATH" <<EOL
 #!/bin/sh
 
-echo "🔄 Rebuilding dist before commit..."
-npm run build
-git add assets/dist/
+BRANCH=\$(git rev-parse --abbrev-ref HEAD)
 
-echo "✅ dist/ has been rebuilt and added to the commit!"
+if [[ "\$BRANCH" == "develop" || "\$BRANCH" == feature/* || "\$BRANCH" == hotfix/* ]]; then
+    echo "🔄 Auto-building project for branch '\$BRANCH'..."
+    npm run build
+    echo "✅ Build complete for '\$BRANCH'"
+fi
 EOL
 
 chmod +x "$HOOK_PATH"
-echo "✅ Git Hook pre-commit has been installed!"
+echo "✅ Git Hook post-checkout has been installed!"
 
-echo "🎉 Setup complete! Now dist/ won't be pushed manually, but it will be rebuilt before each commit."
+# 3️⃣ Создаем `post-merge` хук для сборки после `git pull`
+HOOK_PATH=".git/hooks/post-merge"
+
+cat > "$HOOK_PATH" <<EOL
+#!/bin/sh
+
+BRANCH=\$(git rev-parse --abbrev-ref HEAD)
+
+if [[ "\$BRANCH" == "develop" || "\$BRANCH" == feature/* || "\$BRANCH" == hotfix/* ]]; then
+    echo "🔄 Auto-building project after merge on '\$BRANCH'..."
+    npm run build
+    echo "✅ Build complete after merge on '\$BRANCH'"
+fi
+EOL
+
+chmod +x "$HOOK_PATH"
+echo "✅ Git Hook post-merge has been installed!"
+
+echo "🎉 Setup complete! Now the project will auto-build after git pull or switching to a development branch."
