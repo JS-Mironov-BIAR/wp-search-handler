@@ -1,52 +1,44 @@
-name: Build and Auto-Commit Dist
+name: Build and Release Plugin
 
 on:
   push:
     branches:
-      - master       # Production
-      - develop      # Development
-      - 'feature/**' # Feature branches
-      - 'hotfix/**'  # Hotfix branches
+      - master
+  pull_request:
+    branches:
+      - master
+    types:
+      - closed
 
 jobs:
   build:
+    if: github.event_name == 'push' || (github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - name: 🔄 Cloning the repository
+      - name: 🔄 Checkout repository
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          persist-credentials: true
 
-      - name: 🛠 Installing Node.js
+      - name: 🛠 Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
 
-      - name: 📦 Installing dependencies
+      - name: 📦 Install dependencies
         run: npm ci
 
-      - name: 🧹 Clean dist before build
-        run: rm -rf assets/dist/* # Удаляет dist перед билдом
+      - name: 🔢 Bump version in plugin file
+        run: node update-version.js
 
-      - name: 🔨 Define environment and build project
-        run: |
-          if [[ $GITHUB_REF == "refs/heads/master" ]]; then
-            npm run build -- --mode=production
-          else
-            npm run build -- --mode=development
-          fi
+      - name: 🔨 Build project
+        run: npm run build -- --mode=production
 
-      - name: 📤 Auto commit `dist/` (GitHub Actions)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f assets/dist/ # Принудительно добавляем dist
-          git commit -m "feat: Automatic dist creation for $GITHUB_REF_NAME" || echo "No changes to commit"
-          git push origin HEAD:${GITHUB_REF#refs/heads/}
+      - name: 🗂 Archive built files
+        run: zip -r plugin-build.zip assets/dist/ custom-ajax-search.php
+
+      - name: 📤 Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: wordpress-plugin-build
+          path: plugin-build.zip
