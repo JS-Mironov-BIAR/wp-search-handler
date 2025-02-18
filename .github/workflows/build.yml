@@ -36,13 +36,14 @@ jobs:
 
       - name: 🗂 Create plugin ZIP archive
         run: |
-          zip -r custom-ajax-search.zip \
+          mkdir -p build
+          zip -r build/custom-ajax-search.zip \
           . \
           -x "node_modules/*" ".git/*" ".github/*" ".gitignore" "package-lock.json" \
           "assets/src/*" "setup-hooks.sh" "update-version.js"
 
-      - name: 📤 Upload ZIP artifact
+      - name: 📤 Upload ZIP artifact (direct plugin ZIP)
         uses: actions/upload-artifact@v4
         with:
-          name: wordpress-plugin-build
-          path: custom-ajax-search.zip
+          name: custom-ajax-search.zip
+          path: build/custom-ajax-search.zip

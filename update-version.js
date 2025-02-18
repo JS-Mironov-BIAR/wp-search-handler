@@ -3,11 +3,11 @@ const path = require('path');
 
 const pluginFilePath = path.join(__dirname, 'custom-ajax-search.php');
 
-// Функция для обновления версии в файле
+// 1️⃣ Функция для обновления версии в `custom-ajax-search.php`
 function updatePluginVersion() {
     let pluginFileContent = fs.readFileSync(pluginFilePath, 'utf8');
 
-    // Найдем строку с версией
+    // Найдем строку с версией в `custom-ajax-search.php`
     const versionRegex = /Version:\s*(\d+)\.(\d+)\.(\d+)/;
     const match = pluginFileContent.match(versionRegex);
 
@@ -30,5 +30,16 @@ function updatePluginVersion() {
     return newVersion;
 }
 
-// Выполняем обновление версии
+// 2️⃣ Выполняем обновление версии
 const newVersion = updatePluginVersion();
+
+// 3️⃣ Авто-коммит новой версии в репозиторий
+const { execSync } = require('child_process');
+
+try {
+    execSync(`git add custom-ajax-search.php`, { stdio: 'inherit' });
+    execSync(`git commit -m "chore: bump version to ${newVersion}"`, { stdio: 'inherit' });
+    console.log('✅ Версия зафиксирована в Git.');
+} catch (error) {
+    console.error('❌ Ошибка при коммите версии в Git:', error);
+}
