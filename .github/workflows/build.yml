@@ -35,7 +35,7 @@ jobs:
         run: npm run build -- --mode=production
 
       - name: 🗑 Delete old artifacts
-        uses: geekyeggo/delete-artifact@v2
+        uses: actions/delete-artifact@v3
         with:
           name: custom-ajax-search
 
