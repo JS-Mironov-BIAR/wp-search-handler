@@ -15,7 +15,7 @@ jobs:
     if: github.event_name == 'push' || (github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     permissions:
-      actions: write   # ✅ Разрешение на удаление артефактов и workflow runs
+      actions: write   # ✅ Permission to remove artifacts and workflow runs
 
     steps:
       - name: 🔄 Checkout repository
