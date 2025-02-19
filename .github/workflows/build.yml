@@ -15,7 +15,7 @@ jobs:
     if: github.event_name == 'push' || (github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     permissions:
-      actions: write
+      actions: write   # ✅ Разрешение на удаление артефактов и workflow runs
 
     steps:
       - name: 🔄 Checkout repository
@@ -48,6 +48,20 @@ jobs:
             curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$ID"
+          done
+
+      - name: 🗑 Delete old workflow runs (We leave the last 5)
+        run: |
+          echo "Fetching workflow runs..."
+          RUNS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github+json" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/runs" | jq -r '.workflow_runs | sort_by(.created_at) | reverse | .[5:] | .[].id')
+
+          for RUN_ID in $RUNS; do
+            echo "Deleting workflow run ID: $RUN_ID"
+            curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/$RUN_ID"
           done
 
       - name: 🗂 Create plugin ZIP archive
