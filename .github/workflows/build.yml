@@ -35,7 +35,7 @@ jobs:
         run: npm run build -- --mode=production
 
       - name: 🗑 Delete old artifacts
-        uses: actions/delete-artifact@v3
+        uses: actions/delete-artifact@v2
         with:
           name: custom-ajax-search
 
