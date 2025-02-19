@@ -14,6 +14,8 @@ jobs:
   build:
     if: github.event_name == 'push' || (github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
 
     steps:
       - name: 🔄 Checkout repository
@@ -37,12 +39,14 @@ jobs:
       - name: 🗑 Delete all old artifacts using GitHub API
         run: |
           echo "Fetching artifacts..."
-          ARTIFACTS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          ARTIFACTS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github+json" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | jq -r '.artifacts[] | select(.name=="custom-ajax-search") | .id')
 
           for ID in $ARTIFACTS; do
             echo "Deleting artifact ID: $ID"
-            curl -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$ID"
           done
 
