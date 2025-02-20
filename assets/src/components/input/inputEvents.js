@@ -1,4 +1,4 @@
-import performSearch from '../../search.js'
+import performSearch from '../../search/search.js'
 import { clearResults, hideResults, showResults } from '../resultList.js'
 import {
     isLoading,

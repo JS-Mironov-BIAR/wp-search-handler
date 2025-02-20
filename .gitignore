@@ -24,3 +24,6 @@ logs/
 
 # Tailwind
 tailwind.config.js
+
+#Other Files
+structure.txt
