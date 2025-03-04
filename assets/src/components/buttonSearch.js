@@ -1,5 +1,5 @@
 import { expandSearchForm, updateButtonState } from '../ui.js'
-import performSearch from '../search.js'
+import performSearch from '../search/search.js'
 
 const searchButton = document.getElementById('cas-search-submit')
 

@@ -4,11 +4,7 @@ let inputCleared = false
 let loading = false
 let isBackspaceHeld = false
 
-export function resetState({
-                               resetLastStable = true,
-                               resetInitial = true,
-                               resetCleared = true
-                           } = {}) {
+export function resetState({ resetLastStable = true, resetInitial = true, resetCleared = true } = {}) {
     if (resetLastStable) lastStableInputValue = ''
     if (resetInitial) initialInputValue = ''
     if (resetCleared) inputCleared = true
