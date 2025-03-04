@@ -4,6 +4,7 @@ import { clearResults, hasResults, showResults } from '../components/resultList'
 import { enableLazyLoading } from './lazyLoad.js'
 import { fetchSearchResults } from '../services/searchApi'
 import { createLoadMoreIndicator, removeLoadMoreIndicator } from '../components/loadMoreManager'
+import { highlightQuery } from './searchUtils'
 
 let currentPage = 1
 let totalPages = 1
@@ -50,7 +51,13 @@ export function performSearch(query, resultsContainer, loadMore = false) {
                 resultsContainer.innerHTML += data.data
                     .map(
                         (post) =>
-                            `<li><a href="${post.relationships.link}">${post.attributes.title}</a><p>${post.attributes.excerpt}</p></li>`,
+                            `<li>
+                                <a href="${post.relationships.link}">
+                                    ${highlightQuery(post.attributes.title, query)}
+                                </a>
+
+                                <p>${highlightQuery(post.attributes.excerpt, query)}</p>
+                            </li>`,
                     )
                     .join('')
 
