@@ -1,49 +1,46 @@
-import { performSearch } from './searchPagination';
+import { performSearch } from './searchPagination'
 
-let observer = null;
+let observer = null
+let lazyLoadTimeout = null;
 
 export function enableLazyLoading(resultsContainer, query) {
     if (!query) {
-        console.error("❌ Ошибка: query в enableLazyLoading не определён!");
-        return;
+        return
     }
 
     if (observer) {
-        observer.disconnect();
+        observer.disconnect()
     }
 
     observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const loadMoreButton = document.getElementById('load-more');
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const loadMoreButton = document.getElementById('load-more')
 
-                if (loadMoreButton) {
-                    // Показываем индикатор загрузки
-                    loadMoreButton.innerText = "🔄 Загрузка...";
+                    if (loadMoreButton && !lazyLoadTimeout) {
+                        // Показываем индикатор загрузки
+                        loadMoreButton.innerText = '🔄 Загрузка...'
 
-                    console.log("📌 Запускаем performSearch для подгрузки с query:", query);
+                        console.log('📌 Запускаем performSearch для подгрузки с query:', query)
 
-                    // Вызываем performSearch, но без `.then()`, потому что он не возвращает Promise
-                    performSearch(query, resultsContainer, true);
-
-                    // Удаляем кнопку после загрузки данных
-                    setTimeout(() => {
-                        const newLoadMoreButton = document.getElementById('load-more');
-                        if (newLoadMoreButton) {
-                            newLoadMoreButton.remove();
-                        }
-                    }, 1000); // Добавляем небольшую задержку перед удалением
+                        // Вызываем performSearch, но без `.then()`, потому что он не возвращает Promise
+                        lazyLoadTimeout = setTimeout(() => {
+                            performSearch(query, resultsContainer, true);
+                            lazyLoadTimeout = null; // Сбрасываем таймер
+                        }, 500);
+                    }
                 }
-            }
-        });
-    }, {
-        root: resultsContainer,
-        rootMargin: '0px',
-        threshold: 1.0
-    });
+            })
+        },
+        {
+            root: resultsContainer,
+            rootMargin: '0px',
+            threshold: 1.0,
+        },
+    )
 
-    const loadMoreButton = document.getElementById('load-more');
+    const loadMoreButton = document.getElementById('load-more')
     if (loadMoreButton) {
-        observer.observe(loadMoreButton);
+        observer.observe(loadMoreButton)
     }
 }

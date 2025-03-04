@@ -1,4 +1,5 @@
 /* global cas_ajax */
+const searchCache = new Map()
 
 /**
  * Выполняет AJAX-запрос к кастомному поиску по REST API.
@@ -11,18 +12,30 @@ export async function fetchSearchResults(query, page = 1) {
         return { success: false, data: [], total_count: 0 };
     }
 
+    const cacheKey = `${query}-${page}`;
+
+    if (searchCache.has(cacheKey)) {
+        console.log("⚡ Данные загружены из кэша:", cacheKey);
+        return searchCache.get(cacheKey);
+    }
+
     try {
-        const response = await fetch(`/social-defender/wp-json/cas-search/v1/query/?search=${encodeURIComponent(query)}&page=${page}`);
-        const data = await response.json();
+        console.log("🌐 Выполняем запрос на сервер:", cacheKey);
+
+        const response = await fetch(
+            `/social-defender/wp-json/cas-search/v1/query/?search=${encodeURIComponent(query)}&page=${page}`,
+        )
+        const data = await response.json()
 
         if (!data.success) {
-            console.error('Ошибка поиска:', data);
-            return { success: false, data: [], total_count: 0 };
+            console.error('Ошибка поиска:', data)
+            return { success: false, data: [], total_count: 0 }
         }
 
-        return data;
+        searchCache.set(cacheKey, data);
+        return data
     } catch (error) {
-        console.error('Ошибка при выполнении запроса:', error);
-        return { success: false, data: [], total_count: 0 };
+        console.error('Ошибка при выполнении запроса:', error)
+        return { success: false, data: [], total_count: 0 }
     }
 }

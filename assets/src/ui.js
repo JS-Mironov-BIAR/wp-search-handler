@@ -16,7 +16,7 @@ export function collapseSearchForm() {
 
 export function updateButtonState(state) {
     // Скрываем все кнопки
-    Object.values(buttons).forEach(button => {
+    Object.values(buttons).forEach((button) => {
         if (button) button.style.display = 'none'
     })
 

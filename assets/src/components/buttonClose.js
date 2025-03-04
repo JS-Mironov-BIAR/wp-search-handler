@@ -1,6 +1,6 @@
 import { collapseSearchForm, updateButtonState } from '../ui.js'
 import { blurInput } from './input/inputUtils'
-import { clearInput} from './input/input'
+import { clearInput } from './input/input'
 import { isLoading, resetInitialInputValue, setLoading } from './input/inputState'
 import { clearResults, hideResults } from './resultList.js'
 

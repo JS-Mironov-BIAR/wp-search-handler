@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 /**
  * Получает параметры запроса поиска.
  */
-function get_search_params($request) {
+function get_search_params($request): array {
     return [
         'query' => sanitize_text_field($request['search']),
         'page' => isset($request['page']) ? absint($request['page']) : 1,
