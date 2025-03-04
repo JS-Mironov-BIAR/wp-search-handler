@@ -1,33 +1,28 @@
-import { performSearch } from './searchPagination'
+/* eslint-disable-next-line import/no-cycle */
+import performSearch from './search'
+import { hasMorePages } from './searchPagination'
 
 let observer = null
-let lazyLoadTimeout = null;
+let lazyLoadTimeout = null
 
 export function enableLazyLoading(resultsContainer, query) {
-    if (!query) {
-        return
-    }
+    if (!query) return
 
-    if (observer) {
-        observer.disconnect()
-    }
+    if (observer) observer.disconnect()
 
-    observer = new IntersectionObserver((entries) => {
+    observer = new IntersectionObserver(
+        (entries) => {
             entries.forEach((entry) => {
-                if (entry.isIntersecting) {
+                if (entry.isIntersecting && hasMorePages()) {
                     const loadMoreButton = document.getElementById('load-more')
 
                     if (loadMoreButton && !lazyLoadTimeout) {
-                        // Показываем индикатор загрузки
                         loadMoreButton.innerText = '🔄 Загрузка...'
 
-                        console.log('📌 Запускаем performSearch для подгрузки с query:', query)
-
-                        // Вызываем performSearch, но без `.then()`, потому что он не возвращает Promise
                         lazyLoadTimeout = setTimeout(() => {
-                            performSearch(query, resultsContainer, true);
-                            lazyLoadTimeout = null; // Сбрасываем таймер
-                        }, 500);
+                            performSearch(query, resultsContainer, true)
+                            lazyLoadTimeout = null
+                        }, 500)
                     }
                 }
             })
@@ -40,7 +35,5 @@ export function enableLazyLoading(resultsContainer, query) {
     )
 
     const loadMoreButton = document.getElementById('load-more')
-    if (loadMoreButton) {
-        observer.observe(loadMoreButton)
-    }
+    if (loadMoreButton) observer.observe(loadMoreButton)
 }
