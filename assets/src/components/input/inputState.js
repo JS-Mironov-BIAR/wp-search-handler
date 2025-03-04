@@ -1,4 +1,5 @@
 let lastStableInputValue = ''
+/* eslint-disable-next-line no-unused-vars */
 let initialInputValue = ''
 let inputCleared = false
 let loading = false

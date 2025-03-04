@@ -65,7 +65,8 @@ export function onInput(event, input, resultsContainer) {
         // ✅ Ensure no active search is in progress
         if (!isLoading()) {
             if (isBackspaceActive()) return // 🛑 Do not trigger search if `Backspace` is being held
-            if (normalizeText(currentValue) === normalizeText(getLastStableInputValue())) return // 🛑 Ensure the value has actually changed
+            // 🛑 Ensure the value has actually changed
+            if (normalizeText(currentValue) === normalizeText(getLastStableInputValue())) return
 
             performSearch(currentValue, resultsContainer) // 🔍 Execute AJAX search
             setLastStableInputValue(currentValue) // 💾 Store the last stable value
