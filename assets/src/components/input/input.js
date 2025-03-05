@@ -8,9 +8,8 @@ export function initInputEvents(resultsContainer) {
     initInputHandlers(input, resultsContainer)
 }
 
-// 🛠 Очистка поля ввода
 export function clearInput() {
-    if (isLoading()) return // Запрещаем очистку во время поиска
+    if (isLoading()) return // Forbidding cleaning during the search
 
     resetState()
     resetInputValue(input)

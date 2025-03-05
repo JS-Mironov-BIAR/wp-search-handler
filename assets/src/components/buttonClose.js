@@ -12,14 +12,14 @@ export function initCloseButton(resultsContainer) {
     function closeSearch(event) {
         if (event) event.preventDefault()
 
-        clearTimeout(timeoutId) // Отменяем запущенный поиск
-        setLoading(false) // Разрешаем дальнейшие действия
+        clearTimeout(timeoutId) // Canceling the running search
+        setLoading(false) // Allow further actions
 
         blurInput()
         collapseSearchForm()
         clearInput()
 
-        resetInitialInputValue() // 🛠 Теперь `initialInputValue` сбрасывается!
+        resetInitialInputValue()
 
         clearResults(resultsContainer)
         hideResults(resultsContainer)

@@ -11,7 +11,10 @@
     "lint:fix": "eslint \"assets/src/**/*.js\" --fix",
     "setup": "chmod +x setup-hooks.sh && ./setup-hooks.sh",
     "structure": "powershell -Command \"Get-ChildItem -Path . -Recurse -Force | Where-Object { $_.FullName -notmatch '\\\\.git' -and $_.FullName -notmatch '\\\\node_modules' -and $_.FullName -notmatch '\\\\.github' } | Format-Table -AutoSize > structure.txt\"",
-    "postinstall": "npm run setup"
+    "postinstall": "npm run setup",
+    "compile-ru": "msgfmt languages/custom-ajax-search-ru_RU.po -o languages/custom-ajax-search-ru_RU.mo",
+    "compile-en": "msgfmt languages/custom-ajax-search-en_US.po -o languages/custom-ajax-search-en_US.mo",
+    "compile-translations": "npm run compile-ru && npm run compile-en"
   },
   "keywords": [
     "wordpress",

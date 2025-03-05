@@ -15,7 +15,7 @@ import { updateButtonState } from '../../ui'
 import { handleEmptyInput, handleShortInput } from './inputProcessing'
 
 const SEARCH_DELAY = 700 // ⏳ Delay before executing the search
-let timeoutId // 🕒 Timer for delaying the search
+let timeoutId
 
 // 📌 Handles text input in the search field
 export function onInput(event, input, resultsContainer) {
@@ -88,8 +88,7 @@ export function onCut(event, input, resultsContainer) {
             clearResults(resultsContainer) // 🗑 Clear search results
             hideResults(resultsContainer) // 🔽 Hide the results list
 
-            // 🔘 Show the search button
-            updateButtonState('search')
+            updateButtonState('search') // 🔘 Show the search button
         }
     }, 10)
 }
@@ -102,15 +101,13 @@ export function onClick(resultsContainer) {
 // 📌 Handles `Backspace` key press (marks it as held)
 export function onKeydown(event) {
     if (event.key === 'Backspace') {
-        // 🛑 Mark `Backspace` as held
-        setBackspaceState(true)
+        setBackspaceState(true) // 🛑 Mark `Backspace` as held
     }
 }
 
 // 📌 Handles `Backspace` key release (allows search)
 export function onKeyup(event) {
     if (event.key === 'Backspace') {
-        // ✅ Now `Backspace` is no longer held
-        setBackspaceState(false)
+        setBackspaceState(false) // ✅ Now `Backspace` is no longer held
     }
 }

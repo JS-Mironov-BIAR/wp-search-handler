@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 require_once plugin_dir_path(__FILE__) . 'search-form.php';
 
 /**
- * Шорткод для вывода кастомной формы поиска
- * Использование: [custom_ajax_search]
+ * A shortcode for displaying a custom search form
+ * Usage: [custom_ajax_search]
  */
 
 function cas_search_shortcode($atts) {

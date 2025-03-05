@@ -1,0 +1,40 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: custom-ajax-search 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-03-05 00:00+0000\n"
+"PO-Revision-Date: 2025-03-05 00:00+0000\n"
+"Language: en_US\n"
+
+#, js
+msgid "Поиск"
+msgstr "Search"
+
+msgid "Загрузка"
+msgstr "Loading"
+
+msgid "Загрузить еще"
+msgstr "Load more"
+
+msgid "Поиск не дал результатов"
+msgstr "No search results found"
+
+msgid "Неизвестное состояние кнопки"
+msgstr "Unknown button state"
+
+msgid "⚡ Данные загружены из кэша:"
+msgstr "⚡ Data loaded from cache:"
+
+msgid "🌐 Выполняем запрос на сервер:"
+msgstr "🌐 Sending request to server:"
+
+msgid "Ошибка поиска:"
+msgstr "Search error:"
+
+msgid "Ошибка при выполнении запроса:"
+msgstr "Error executing request:"

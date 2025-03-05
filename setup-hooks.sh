@@ -2,7 +2,7 @@
 
 echo "🔧 Setting up Git Hooks and local exclusions..."
 
-# 1️⃣ Добавляем `dist/` в `.git/info/exclude` (чтобы Git не отслеживал локально)
+# 1️⃣ Add 'dist/' to '`git/info/exclude' `so that Git does not track locally)
 EXCLUDE_PATH=".git/info/exclude"
 
 if ! grep -q "^assets/dist/" "$EXCLUDE_PATH"; then
@@ -13,7 +13,7 @@ else
     echo "✔ assets/dist/ is already in .git/info/exclude"
 fi
 
-# 2️⃣ Создаем `post-checkout` хук для сборки после `git checkout` (при смене ветки или создании новой)
+# 2️⃣ Creating a 'post-checkout' hook for the build after the `git checkout` (when changing branches or creating a new one)
 HOOK_PATH=".git/hooks/post-checkout"
 
 cat > "$HOOK_PATH" <<EOL
@@ -31,7 +31,7 @@ EOL
 chmod +x "$HOOK_PATH"
 echo "✅ Git Hook post-checkout has been installed!"
 
-# 3️⃣ Создаем `post-merge` хук для сборки после `git pull`
+# 3️⃣ Creating a `post-merge` hook for the build after the `git pull'
 HOOK_PATH=".git/hooks/post-merge"
 
 cat > "$HOOK_PATH" <<EOL

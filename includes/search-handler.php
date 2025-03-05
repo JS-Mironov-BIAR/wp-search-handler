@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Получает параметры запроса поиска.
+ * Gets the search query parameters.
  */
 function get_search_params($request): array {
     return [
@@ -16,19 +16,19 @@ function get_search_params($request): array {
 }
 
 /**
- * Выполняет WP_Query с улучшенным поиском.
+ * Performs WP_Query with improved search.
  */
 function perform_wp_query($params) {
     $args = [
-        'post_status' => ['publish'], // Только опубликованные записи
+        'post_status' => ['publish'],
         'post_type' => $params['post_types'],
         'posts_per_page' => $params['per_page'],
         'paged' => $params['page'],
-        's' => $params['query'], // WordPress сам ищет в title, content, excerpt
+        's' => $params['query'],
         'orderby' => 'relevance'
     ];
 
-    // Проверяем, есть ли теги, соответствующие запросу
+    // Checking if there are tags matching the query
     $tag = get_term_by('name', $params['query'], 'post_tag');
     if ($tag) {
         $args['tax_query'] = [
@@ -44,7 +44,7 @@ function perform_wp_query($params) {
 }
 
 /**
- * Форматирует JSON-ответ API.
+ * Formats the JSON API response.
  */
 function format_search_response($query, $params) {
     $results = [];
@@ -56,7 +56,7 @@ function format_search_response($query, $params) {
                 'id' => get_the_ID(),
                 'attributes' => [
                     'title' => get_the_title(),
-                    'excerpt' => get_the_excerpt(),
+                    'excerpt' => get_custom_excerpt(get_the_ID()),
                     'full_content' => apply_filters('the_content', get_the_content()),
                 ],
                 'relationships' => [
@@ -94,21 +94,21 @@ function format_search_response($query, $params) {
 }
 
 /**
- * Основная функция REST API поиска.
+ * The main function of the REST search API.
  */
 function cas_rest_search($request) {
     $params = get_search_params($request);
     $query = perform_wp_query($params);
 
-    // Логируем поиск
-    error_log("🔍 Поиск: " . $params['query']);
+
+    /*    error_log("🔍 Поиск: " . $params['query']);
     error_log("📌 SQL-запрос WP_Query: " . json_encode($query->query_vars));
-    error_log("📌 Найдено записей: " . $query->found_posts);
+    error_log("📌 Найдено записей: " . $query->found_posts); */
 
     return rest_ensure_response(format_search_response($query, $params));
 }
 
-// Регистрируем API маршрут
+// Registering an API route
 add_action('rest_api_init', function () {
     register_rest_route('cas-search/v1', '/query/', [
         'methods' => 'GET',

@@ -4,7 +4,7 @@ import { clearResults, hasResults, showResults } from '../components/resultList'
 import { fetchSearchResults } from '../services/searchApi'
 import { createLoadMoreIndicator, removeLoadMoreIndicator } from '../components/loadMoreManager'
 import { highlightQuery } from './searchUtils'
-import { setupPagination, getCurrentPage, incrementPage, setTotalPages, hasMorePages } from './searchPagination'
+import { setupPagination, getCurrentPage, incrementPage, setTotalPages, hasMorePages } from './pagination'
 /* eslint-disable-next-line import/no-cycle */
 import { enableLazyLoading } from './lazyLoad'
 
@@ -41,7 +41,7 @@ export default function performSearch(query, resultsContainer, loadMore = false)
             }
 
             if (data.success && data.data.length > 0) {
-                setTotalPages(data.pagination.total_pages) // ✅ Теперь totalPages корректно обновляется
+                setTotalPages(data.pagination.total_pages)
 
                 resultsContainer.innerHTML += data.data
                     .map(
@@ -66,7 +66,7 @@ export default function performSearch(query, resultsContainer, loadMore = false)
                 }
             } else {
                 if (!loadMore) {
-                    resultsContainer.innerHTML = '<li>⚠ Нет результатов</li>'
+                    resultsContainer.innerHTML = '<li>По запросу результатов не найдено</li>'
                 }
                 showResults(resultsContainer)
             }

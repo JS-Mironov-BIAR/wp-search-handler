@@ -12,8 +12,7 @@
  */
 
 if (!defined('ABSPATH')) {
-	exit; // Защита от прямого доступа
+	exit;
 }
 
-// Подключение файлов
 require_once plugin_dir_path(__FILE__) . 'includes/init.php';

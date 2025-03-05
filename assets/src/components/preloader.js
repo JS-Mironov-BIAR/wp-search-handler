@@ -4,7 +4,7 @@ const closeButton = document.getElementById('cas-search-close')
 let lastVisibleButton = 'search'
 
 export function showLoader() {
-    lastVisibleButton = closeButton.style.display === 'inline-block' ? 'clear' : 'search'
+    lastVisibleButton = closeButton.style.display === 'inline-flex' ? 'clear' : 'search'
     // lastVisibleButton = lastVisibleButton === 'clear' ? 'clear' : 'search'
 
     updateButtonState('loading')

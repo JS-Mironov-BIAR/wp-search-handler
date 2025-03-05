@@ -15,14 +15,12 @@ export function collapseSearchForm() {
 }
 
 export function updateButtonState(state) {
-    // Скрываем все кнопки
     Object.values(buttons).forEach((button) => {
         if (button) button.style.display = 'none'
     })
 
-    // Показываем нужную кнопку
     if (buttons[state]) {
-        buttons[state].style.display = 'inline-block'
+        buttons[state].style.display = 'inline-flex'
     } else {
         console.warn(`Неизвестное состояние кнопки: ${state}`)
     }

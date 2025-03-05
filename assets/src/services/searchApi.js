@@ -1,10 +1,10 @@
 const searchCache = new Map()
 
 /**
- * Выполняет AJAX-запрос к кастомному поиску по REST API.
- * @param {string} query - Строка поиска.
- * @param {number} page - Номер страницы (по умолчанию 1).
- * @returns {Promise<object>} - Объект с результатами поиска.
+ * Executes an AJAX request to a custom search using the REST API.
+ * @param {string} query - The search string.
+ * @param {number} page - The page number (default is 1).
+ * @returns {Promise<object>} - The object with the search results.
  */
 export async function fetchSearchResults(query, page = 1) {
     if (!query.trim() || query.length <= 3) {
@@ -20,7 +20,7 @@ export async function fetchSearchResults(query, page = 1) {
 
     try {
         console.log('🌐 Выполняем запрос на сервер:', cacheKey)
-
+        console.log('Загруженный перевод для "loading":', customAjaxSearchL10n.loading);
         const response = await fetch(
             `/social-defender/wp-json/cas-search/v1/query/?search=${encodeURIComponent(query)}&page=${page}`,
         )
