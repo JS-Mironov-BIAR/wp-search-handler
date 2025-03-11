@@ -24,6 +24,9 @@ msgstr "Load more"
 msgid "Поиск не дал результатов"
 msgstr "No search results found"
 
+msgid "Результаты поиска"
+msgstr "Search results"
+
 msgid "Неизвестное состояние кнопки"
 msgstr "Unknown button state"
 

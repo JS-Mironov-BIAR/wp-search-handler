@@ -7,6 +7,7 @@ import { highlightQuery } from './searchUtils'
 import { setupPagination, getCurrentPage, incrementPage, setTotalPages, hasMorePages } from './pagination'
 /* eslint-disable-next-line import/no-cycle */
 import { enableLazyLoading } from './lazyLoad'
+import { disableCloseButton, enableCloseButton } from '../ui'
 
 export default function performSearch(query, resultsContainer, loadMore = false) {
     if (!query.trim() || query.length <= 3) {
@@ -25,11 +26,13 @@ export default function performSearch(query, resultsContainer, loadMore = false)
     }
 
     setLoading(true)
+    disableCloseButton()
     showLoader()
 
     fetchSearchResults(query, getCurrentPage())
         .then((data) => {
             setLoading(false)
+            enableCloseButton()
             hideLoader()
 
             if (hasResults(resultsContainer)) {
@@ -42,6 +45,10 @@ export default function performSearch(query, resultsContainer, loadMore = false)
 
             if (data.success && data.data.length > 0) {
                 setTotalPages(data.pagination.total_pages)
+
+                if (!loadMore) {
+                    resultsContainer.innerHTML = `<li class="search-result--title">${customAjaxSearchL10n.search_results}</li>`
+                }
 
                 resultsContainer.innerHTML += data.data
                     .map(
@@ -66,14 +73,15 @@ export default function performSearch(query, resultsContainer, loadMore = false)
                 }
             } else {
                 if (!loadMore) {
-                    resultsContainer.innerHTML = '<li>По запросу результатов не найдено</li>'
+                    resultsContainer.innerHTML = `<li>${customAjaxSearchL10n.no_results}</li>`
                 }
                 showResults(resultsContainer)
             }
         })
         .catch((error) => {
             setLoading(false)
+            enableCloseButton()
             hideLoader()
-            console.error('Search error:', error)
+            console.error(`${customAjaxSearchL10n.search_error}`, error)
         })
 }

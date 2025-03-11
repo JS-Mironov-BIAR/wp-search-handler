@@ -14,6 +14,7 @@ import { normalizeText } from './inputUtils.js'
 import { updateButtonState } from '../../ui'
 import { handleEmptyInput, handleShortInput } from './inputProcessing'
 
+const form = document.querySelector('.cas-search-form')
 const SEARCH_DELAY = 700 // ⏳ Delay before executing the search
 let timeoutId
 
@@ -109,5 +110,11 @@ export function onKeydown(event) {
 export function onKeyup(event) {
     if (event.key === 'Backspace') {
         setBackspaceState(false) // ✅ Now `Backspace` is no longer held
+    }
+}
+
+export function onMobileFocus(event) {
+    if (window.innerWidth <= 767) {
+        form.classList.add('form-mobile-active')
     }
 }

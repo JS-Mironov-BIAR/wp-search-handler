@@ -1,11 +1,15 @@
 import { expandSearchForm, updateButtonState } from '../ui.js'
 import performSearch from '../search/search.js'
+import { onMobileFocus } from './input/inputEvents'
 
 const searchButton = document.getElementById('cas-search-submit')
 
 export function initSearchButton(resultsContainer) {
     searchButton.addEventListener('click', (event) => {
         event.preventDefault()
+
+        onMobileFocus(event)
+
         expandSearchForm()
         updateButtonState('clear')
 

@@ -1,7 +1,7 @@
 .cas-search-form {
     position: relative;
     width: 100%;
-    max-width: 400px;
+    min-width: 58px;
     transition: max-width 0.3s ease-in-out;
 }
 
@@ -13,7 +13,7 @@
     border-radius: 6px;
     height: 3rem;
     transition: width 0.3s ease-in-out;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .cas-search-button:disabled {
@@ -57,7 +57,7 @@
 
 #cas-search-close {
     color: #4a4a4a;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .cas-ajax-search {
@@ -104,10 +104,10 @@
     margin-bottom: 4px;
 }
 
-.cas-ajax-search li + li {
-    margin-top: 0;
-    border-top: 1px solid #dedede;
-    border-radius: 0;
+.cas-ajax-search li:not(.search-result--title) + li {
+    margin-top: 4px;
+    /*border-top: 1px solid #dedede;*/
+    border-radius: 6px;
     padding: 10px 6px;
 }
 
@@ -155,27 +155,94 @@
 }
 
 .cas-ajax-search li {
-    font-size: 14px;
+    font-size: 15px;
     color: #333;
     font-weight: 500;
 }
 
 #cas-search-results li a {
     text-decoration: none;
-    font-size: 14px;
+    font-size: 15px;
     color: #333;
     font-weight: 500;
     line-height: 1;
 }
 
 #cas-search-results li p {
-    font-size: 14px;
+    font-size: 15px;
     color: #616161;
-    margin: 10px 0 0 0;
+    margin: 5px 0 0 0;
+    font-weight: 300;
 }
 
 #cas-search-results mark {
     color: #ae7d00;
     background-color: transparent;
     border-radius: 6px;
+}
+
+#cas-search-results .search-result--title {
+    color: #b0b0b0;
+    font-size: 14px;
+    font-weight: 300;
+    margin-top: 1rem !important;
+}
+
+#cas-search-results .search-result--title:hover {
+    background-color: transparent;
+}
+
+.form-mobile-active.cas-search-form {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: #fff;
+    z-index: 99;
+    padding: 3.5rem 1rem 1rem;
+}
+
+.form-mobile-active  .cas-ajax-search {
+    position: relative;
+    max-height: calc(100% - 3rem);
+}
+
+#cas-form-close {
+    position: absolute;
+    left: 14px;
+    top: 1.5rem;
+    right: auto;
+}
+
+.form-mobile-active #cas-form-close {
+    display: flex !important;
+    font-size: 16px;
+    gap: 5px;
+    color: #4a4a4a;
+}
+
+.form-mobile-active .cas-search-wrapper {
+    position: relative;
+}
+
+.form-mobile-active .cas-ajax-search {
+    box-shadow: none;
+}
+
+@media (max-width: 767px) {
+    .cas-search-form:not(.form-mobile-active) .cas-search-input {
+        padding: 12px 6px 12px 6px;
+        max-width: 120px;
+        box-shadow: none !important;
+    }
+    .cas-search-form:not(.form-mobile-active) .cas-search-input::placeholder {
+        color: transparent;
+    }
+    .cas-ajax-search li:hover {
+        background-color: transparent;
+    }
+    .cas-search-close--text {
+        display: none;
+    }
 }

@@ -1,6 +1,6 @@
 import { resetState, setLoading } from './inputState.js'
 import { clearResults, hideResults } from '../resultList.js'
-import { updateButtonState } from '../../ui'
+import { enableCloseButton, updateButtonState } from '../../ui'
 
 export function handleEmptyInput(resultsContainer) {
     resetState({ resetInitial: false })

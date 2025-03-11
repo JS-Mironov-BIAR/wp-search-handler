@@ -17,6 +17,7 @@ function cas_enqueue_assets() {
         'loading'        => __( 'Загрузка', 'custom-ajax-search' ),
         'load_more'      => __( 'Загрузить еще', 'custom-ajax-search' ),
         'no_results'     => __( 'Поиск не дал результатов', 'custom-ajax-search' ),
+        'search_results'     => __( 'Результаты поиска', 'custom-ajax-search' ),
         'unknown_btn'    => __( 'Неизвестное состояние кнопки', 'custom-ajax-search' ),
         'cached_data'    => __( '⚡ Данные загружены из кэша:', 'custom-ajax-search' ),
         'server_request' => __( '🌐 Выполняем запрос на сервер:', 'custom-ajax-search' ),
